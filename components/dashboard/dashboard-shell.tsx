@@ -46,6 +46,21 @@ const ExternalLinkIcon = () => (
   </svg>
 );
 
+const SearchIcon = () => (
+  <svg
+    aria-hidden="true"
+    className="h-4 w-4 stroke-current text-slate-400"
+    viewBox="0 0 24 24"
+    fill="none"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <circle cx="11" cy="11" r="8" />
+    <path d="m21 21-4.35-4.35" />
+  </svg>
+);
+
 export function DashboardShell({ initialLinks, baseUrl }: Props) {
   const [links, setLinks] = useState(initialLinks);
   const [form, setForm] = useState<FormState>({ url: "", code: "" });
@@ -170,12 +185,18 @@ export function DashboardShell({ initialLinks, baseUrl }: Props) {
           <h1 className="text-3xl font-semibold text-slate-900">Dashboard</h1>
           <p className="text-slate-600">Create short links and track performance at a glance.</p>
         </div>
-        <div className="w-full md:w-64">
-          <Input
-            placeholder="Search by code or URL"
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-          />
+        <div className="hidden w-full md:block md:w-64">
+          <div className="relative">
+            <Input
+              placeholder="Search by code or URL"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              className="pr-10"
+            />
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+              <SearchIcon />
+            </div>
+          </div>
         </div>
       </div>
 
@@ -222,6 +243,20 @@ export function DashboardShell({ initialLinks, baseUrl }: Props) {
         </form>
       </Card>
 
+      <div className="block md:hidden">
+        <div className="relative">
+          <Input
+            placeholder="Search by code or URL"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            className="pr-10"
+          />
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+            <SearchIcon />
+          </div>
+        </div>
+      </div>
+
       <Card>
         <div className="flex items-center justify-between pb-4">
           <h2 className="text-xl font-semibold text-slate-900">Links</h2>
@@ -254,12 +289,12 @@ export function DashboardShell({ initialLinks, baseUrl }: Props) {
                 {filteredLinks.map((link) => (
                   <tr key={link.code}>
                     <td className="px-3 py-3 font-mono text-sm text-slate-900">{link.code}</td>
-                    <td className="px-3 py-3">
+                    <td className="px-3 py-3 max-w-[8rem] md:max-w-none">
                       <div className="flex items-center gap-2 min-w-0">
                         <button
                           type="button"
                           onClick={() => handleCopy(link.code)}
-                          className="text-accent underline-offset-2 hover:underline truncate min-w-0"
+                          className="text-accent underline-offset-2 hover:underline truncate min-w-0 flex-1"
                           title={`${baseUrl}/${link.code}`}
                         >
                           {baseUrl}/{link.code}
@@ -268,7 +303,7 @@ export function DashboardShell({ initialLinks, baseUrl }: Props) {
                           href={`${baseUrl}/${link.code}`}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center rounded-full border border-slate-200 p-1 text-slate-400 hover:border-slate-300 hover:text-slate-600"
+                          className="inline-flex items-center rounded-full border border-slate-200 p-1 text-slate-400 hover:border-slate-300 hover:text-slate-600 flex-shrink-0"
                           aria-label={`Open ${link.code} in new tab`}
                         >
                           <ExternalLinkIcon />
